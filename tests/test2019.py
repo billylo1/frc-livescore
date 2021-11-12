@@ -2,7 +2,7 @@ import difflib
 import os
 import sys
 import yaml
-import cv2
+import cv2.cv2 as cv2
 
 from livescore import Livescore2019
 

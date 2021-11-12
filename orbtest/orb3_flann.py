@@ -1,21 +1,33 @@
 import numpy as np
-import cv2.cv2 as cv
+import cv2.cv2 as cv2
 
-img1 = cv.imread('score_overlay_2021_1280.png')  # queryImage
-img2 = cv.imread('2021/frame-00570.jpg')  # trainImage
 
-# Initiate SIFT detector
-sift = cv.xfeatures2d.SURF_create()
+# Read the query image as query_img
+# and train image This query image
+# is what you need to find in train image
+# Save it in the same directory
+# with the name image.jpg
+img1 = cv2.imread('score_overlay_2021_1280.png')
+img2 = cv2.imread('2021/frame-00570.jpg')
 
-# find the keypoints and descriptors with SIFT
-kp1, des1 = sift.detectAndCompute(img1, None)
-kp2, des2 = sift.detectAndCompute(img2, None)
+# Convert it to grayscale
+# query_img_bw = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+# train_img_bw = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+
+# Initialize the ORB detector algorithm
+orb = cv2.ORB_create()
+
+# Now detect the keypoints and compute
+# the descriptors for the query image
+# and train image
+kp1, des1 = orb.detectAndCompute(img1, None)
+kp2, des2 = orb.detectAndCompute(img2, None)
 
 # FLANN parameters
 FLANN_INDEX_KDTREE = 1
 index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
 search_params = dict(checks=50)  # or pass empty dictionary
-flann = cv.FlannBasedMatcher(index_params, search_params)
+flann = cv2.FlannBasedMatcher(index_params, search_params)
 matches = flann.knnMatch(des1, des2, k=2)
 
 # Apply ratio test
@@ -26,7 +38,7 @@ for m, n in matches:
 
 src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
 dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
-t = cv.estimateAffinePartial2D(src_pts, dst_pts)
+t = cv2.estimateAffinePartial2D(src_pts, dst_pts)
 
 transform = {
     'scale': t[0][0, 0],
@@ -54,13 +66,13 @@ def _cornersToBox(tl, br):
 
 
 def _drawBox(img, box, color):
-    cv.polylines(img, [box], True, color, 2, cv.LINE_AA)
+    cv2.polylines(img, [box], True, color, 2, cv2.LINE_AA)
 
 
 box = _cornersToBox(transformPoint((0, 0)), transformPoint((1280, 170)))
 _drawBox(img2, box, (255, 255, 0))
 
-img3 = cv.drawMatchesKnn(img1, kp1, img2, kp2, [[m] for m in good], None,
-                         flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
-cv.imshow("Matches", img3)
-cv.waitKey()
+img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, [[m] for m in good], None,
+                         flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+cv2.imshow("Matches", img2)
+cv2.waitKey()

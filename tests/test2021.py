@@ -12,21 +12,17 @@ frc = Livescore2020(debug=False)
 
 error = False
 
-with open('data/2020.yml') as data:
-    values = yaml.load(data)
+with open('data/2021.yml') as data:
+    values = yaml.load(data, Loader=yaml.CLoader)
 
 for f in values:
-    # print(f)
 
-
-# # Read all images from the ./images/2019 directory
-# for f in os.listdir('images/2020'):
     expected_value = values[f]
 
     print("Processing: {}".format(f))
 
     # Read the image with OpenCV
-    image = cv2.imread('images/2020/' + f)
+    image = cv2.imread('images/2021/' + f)
 
     # Get score data
     data = frc.read(image, force_find_overlay=True)

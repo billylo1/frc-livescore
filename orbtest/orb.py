@@ -70,7 +70,7 @@ matches = matcher.match(template_des, target_des)
 final_img = cv2.drawMatches(template, template_kp,
                             target, target_kp, matches[:20], None)
 #
-# final_img = cv2.resize(final_img, (1000, 650))
+final_img = cv2.resize(final_img, (1000, 650))
 #
 # Show the final image
 cv2.imshow("Matches", final_img)

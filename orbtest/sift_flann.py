@@ -18,9 +18,6 @@ search_params = dict(checks=50)  # or pass empty dictionary
 flann = cv.FlannBasedMatcher(index_params, search_params)
 matches = flann.knnMatch(des1, des2, k=2)
 
-# Need to draw only good matches, so create a mask
-matchesMask = [[0, 0] for i in range(len(matches))]
-
 # Apply ratio test
 good = []
 for m, n in matches:
