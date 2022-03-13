@@ -208,6 +208,8 @@ class LivescoreBase(object):
         # Crop
         img = img[tl[1]:br[1], tl[0]:br[0]]
 
+
+        # shape: rows, cols, chans
         # Scale
         scale = float(self._OCR_HEIGHT) / img.shape[0]
         img = cv2.resize(img, (int(img.shape[1] * scale), int(img.shape[0] * scale)))
@@ -217,8 +219,7 @@ class LivescoreBase(object):
             return cv2.morphologyEx(cv2.inRange(img, self._WHITE_LOW, self._WHITE_HIGH), cv2.MORPH_OPEN,
                                     self._morph_kernel)
         else:
-            return cv2.morphologyEx(cv2.inRange(img, self._BLACK_LOW, self._BLACK_HIGH), cv2.MORPH_OPEN,
-                                    self._morph_kernel)
+            return cv2.morphologyEx(cv2.inRange(img, self._BLACK_LOW, self._BLACK_HIGH), cv2.MORPH_OPEN, self._morph_kernel)
 
     def _parseRawMatchName(self, img):
         config = '--oem 1 --psm 7 {} -l eng'.format(TESSDATA_CONFIG)

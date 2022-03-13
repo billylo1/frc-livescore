@@ -34,19 +34,19 @@
 #  Red score: 23
 #  Blue score: 69
 #
-#frame0160-end.jpg: |
-#  Match Key: sf2m1
-#  Match Name: Semifinal 2 of 4
-#  Mode: post_match
-#  Time remaining: 0
-#  Red score: 23
-#  Blue score: 69
-
-
-frame2.png: |
-  Match Key: test
-  Match Name: Test Match
-  Mode: pre_match
+frame0160-end.jpg: |
+  Match Key: sf2m1
+  Match Name: Semifinal 2 of 4
+  Mode: post_match
   Time remaining: 0
-  Red score: 0
-  Blue score: 0
+  Red score: 23
+  Blue score: 69
+
+
+#frame2.png: |
+#  Match Key: test
+#  Match Name: Test Match
+#  Mode: pre_match
+#  Time remaining: 0
+#  Red score: 0
+#  Blue score: 0

@@ -13,7 +13,7 @@ frc = Livescore2020(debug=False)
 error = False
 
 with open('data/2021.yml') as data:
-    values = yaml.load(data, Loader=yaml.CLoader)
+    values = yaml.load(data)
 
 for f in values:
 
