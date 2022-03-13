@@ -117,8 +117,8 @@ class LivescoreBase(object):
         template = cv2.imread(
             pkg_resources.resource_filename(__name__, 'templates') + \
             '/score_overlay_{}.png'.format(game_year))
-        tpl_width=np.int32(np.round(template.shape[1] * self._TEMPLATE_SCALE))
-        tpl_height=np.int32(np.round(template.shape[0] * self._TEMPLATE_SCALE))
+        tpl_width = np.int32(np.round(template.shape[1] * self._TEMPLATE_SCALE))
+        tpl_height = np.int32(np.round(template.shape[0] * self._TEMPLATE_SCALE))
         self._template = cv2.resize(template, (
             tpl_width,
             tpl_height
@@ -171,6 +171,11 @@ class LivescoreBase(object):
             if m.distance < 0.7 * n.distance:
                 good.append(m)
 
+        if self._debug:
+            debug_img = cv2.drawMatchesKnn(self._template, self._kp1, img, kp2, [[m] for m in good], None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+            cv2.imshow("Match", debug_img)
+            cv2.waitKey()
+
         if len(good) >= self._MIN_MATCH_COUNT:
             src_pts = np.float32([self._kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
             dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
@@ -187,6 +192,7 @@ class LivescoreBase(object):
 
         self._transform = None
         self._is_new_overlay = False
+
         raise NoOverlayFoundException("Not enough matches are found - {}/{}".format(len(good), self._MIN_MATCH_COUNT))
 
     def _transformPoint(self, point):
@@ -208,7 +214,6 @@ class LivescoreBase(object):
         # Crop
         img = img[tl[1]:br[1], tl[0]:br[0]]
 
-
         # shape: rows, cols, chans
         # Scale
         scale = float(self._OCR_HEIGHT) / img.shape[0]
@@ -219,7 +224,8 @@ class LivescoreBase(object):
             return cv2.morphologyEx(cv2.inRange(img, self._WHITE_LOW, self._WHITE_HIGH), cv2.MORPH_OPEN,
                                     self._morph_kernel)
         else:
-            return cv2.morphologyEx(cv2.inRange(img, self._BLACK_LOW, self._BLACK_HIGH), cv2.MORPH_OPEN, self._morph_kernel)
+            return cv2.morphologyEx(cv2.inRange(img, self._BLACK_LOW, self._BLACK_HIGH), cv2.MORPH_OPEN,
+                                    self._morph_kernel)
 
     def _parseRawMatchName(self, img):
         config = '--oem 1 --psm 7 {} -l eng'.format(TESSDATA_CONFIG)
@@ -341,7 +347,7 @@ class LivescoreBase(object):
         matched_key = None
         for key, template_img in templates.items():
             template_img = cv2.resize(template_img, (
-            int(np.round(template_img.shape[1] * scale)), int(np.round(template_img.shape[0] * scale))))
+                int(np.round(template_img.shape[1] * scale)), int(np.round(template_img.shape[0] * scale))))
             res = cv2.matchTemplate(img, template_img, cv2.TM_CCOEFF)
             _, max_val, _, _ = cv2.minMaxLoc(res)
             if max_val > best_max_val:

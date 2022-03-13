@@ -5,10 +5,10 @@ import yaml
 import cv2.cv2 as cv2
 import numpy as np
 
-from livescore import Livescore2020
+from livescore import Livescore2021
 
 # Initialize new Livescore instance
-frc = Livescore2020(debug=False)
+frc = Livescore2021(debug=False)
 
 error = False
 

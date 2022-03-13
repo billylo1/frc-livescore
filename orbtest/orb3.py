@@ -86,7 +86,7 @@ img3 = cv2.resize(img2, (
     np.int32(np.round(img2.shape[0] * scale_factor))
 ))
 
-# img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, [[m] for m in good], None,
-#                          flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, [[m] for m in good], None,
+                         flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
 cv2.imshow("Matches", img3)
 cv2.waitKey()
