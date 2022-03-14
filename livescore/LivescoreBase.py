@@ -58,20 +58,20 @@ def num_pat(r):
 # Einstein Final X
 # Einstein Final Tiebreaker
 MATCH_ID_FORMATS = [
-    (regex.compile(num_pat('(Test\s+Match){e<=3}')), 'test', False),
-    (regex.compile(num_pat('(Practice){e<=3}\s+([@]+)'), False), 'pm', False),
-    (regex.compile(num_pat('(Qualification){e<=3}\s+([@]+)'), False), 'qm', False),
-    (regex.compile(num_pat('(Octofinal){e<=3}\s+([@]+)'), False), 'ef', False),
-    (regex.compile(num_pat('(Octofinal\s+Tiebreaker){e<=3}\s+([@]+)'), False), 'ef', True),
-    (regex.compile(num_pat('(Quarterfinal){e<=3}\s+([@]+)'), False), 'qf', False),
-    (regex.compile(num_pat('(Quarterfinal\s+Tiebreaker){e<=3}\s+([@]+)'), False), 'qf', True),
-    (regex.compile(num_pat('(Semifinal){e<=3}\s+([@]+)'), False), 'sf', False),
-    (regex.compile(num_pat('(Semifinal\s+Tiebreaker){e<=3}\s+([@]+)'), False), 'sf', True),
-    (regex.compile(num_pat('(Final){e<=3}\s+([@]+)'), False), 'f', False),
-    (regex.compile(num_pat('(Overtime){e<=3}\s+([@]+)'), False), 'overtimef', False),
-    (regex.compile(num_pat('(Einstein){e<=3}\s+([@]+)'), False), 'sf', False),
-    (regex.compile(num_pat('(Einstein\s+Final){e<=3}\s+([@]+)'), False), 'f', False),
-    (regex.compile(num_pat('(Einstein\s+Final\s+Tiebreaker){e<=3}\s+([@]+)'), False), 'f', True),
+    (regex.compile(num_pat(r'(Test\s+Match){e<=3}')), 'test', False),
+    (regex.compile(num_pat(r'(Practice){e<=3}\s+([@]+)'), False), 'pm', False),
+    (regex.compile(num_pat(r'(Qualification){e<=3}\s+([@]+)'), False), 'qm', False),
+    (regex.compile(num_pat(r'(Octofinal){e<=3}\s+([@]+)'), False), 'ef', False),
+    (regex.compile(num_pat(r'(Octofinal\s+Tiebreaker){e<=3}\s+([@]+)'), False), 'ef', True),
+    (regex.compile(num_pat(r'(Quarterfinal){e<=3}\s+([@]+)'), False), 'qf', False),
+    (regex.compile(num_pat(r'(Quarterfinal\s+Tiebreaker){e<=3}\s+([@]+)'), False), 'qf', True),
+    (regex.compile(num_pat(r'(Semifinal){e<=3}\s+([@]+)'), False), 'sf', False),
+    (regex.compile(num_pat(r'(Semifinal\s+Tiebreaker){e<=3}\s+([@]+)'), False), 'sf', True),
+    (regex.compile(num_pat(r'(Final){e<=3}\s+([@]+)'), False), 'f', False),
+    (regex.compile(num_pat(r'(Overtime){e<=3}\s+([@]+)'), False), 'overtimef', False),
+    (regex.compile(num_pat(r'(Einstein){e<=3}\s+([@]+)'), False), 'sf', False),
+    (regex.compile(num_pat(r'(Einstein\s+Final){e<=3}\s+([@]+)'), False), 'f', False),
+    (regex.compile(num_pat(r'(Einstein\s+Final\s+Tiebreaker){e<=3}\s+([@]+)'), False), 'f', True),
 ]
 
 
@@ -106,7 +106,7 @@ class LivescoreBase(object):
         self._transform = None  # scale, tx, ty
 
         # Setup feature detector and matcher
-        self._detector = cv2.ORB_create(nfeatures=10000)  #nfeatures=1550000
+        self._detector = cv2.ORB_create(nfeatures=10000)  # nfeatures=1550000
 
         # FLANN_INDEX_KDTREE = 0
         FLANN_INDEX_LSH = 6
@@ -184,10 +184,11 @@ class LivescoreBase(object):
                 good.append(m)
 
         if self._debug:
-            debug_img = cv2.drawMatchesKnn(self._template, self._kp1, img, kp2, [[m] for m in good], None, flags=cv2.DrawMatchesFlags_DEFAULT)
+            debug_img = cv2.drawMatchesKnn(self._template, self._kp1, img, kp2, [[m] for m in good], None,
+                                           flags=cv2.DrawMatchesFlags_DEFAULT)
             debug_img = cv2.resize(debug_img, (
-                np.int32(1280*2/2),
-                np.int32(720/2)
+                np.int32(1280 * 2 / 2),
+                np.int32(720 / 2)
             ))
             cv2.imshow("Match", debug_img)
             cv2.waitKey()
