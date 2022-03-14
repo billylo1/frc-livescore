@@ -17,8 +17,9 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
+        pip install -U pytest pytest-xdist
+        apt-get install tesseract-ocr libtesseract-dev
 
     - name: Test with pytest
       run: |
-        pip install -U pytest pytest-xdist
         pytest -n 3
