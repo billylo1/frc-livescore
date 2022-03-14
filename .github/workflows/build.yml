@@ -18,7 +18,7 @@ jobs:
       run: |
         pip install -r requirements.txt
         pip install -U pytest pytest-xdist
-        apt-get install tesseract-ocr libtesseract-dev
+        sudo apt-get -y install tesseract-ocr libtesseract-dev
 
     - name: Test with pytest
       run: |
