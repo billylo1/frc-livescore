@@ -15,7 +15,7 @@ def processYear(gameYear, **kwargs):
 
     yamlFile = 'data/{}.yml'.format(gameYear)
     with open(yamlFile) as data:
-        values = yaml.load(data)
+        values = yaml.load(data, Loader=yaml.Loader)
 
     if values is None:
         error = True
