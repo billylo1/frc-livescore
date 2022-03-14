@@ -2,14 +2,12 @@
 
 A package which can determine the score of a live FRC game from an image.
 
-![Travis](https://img.shields.io/travis/andrewda/frc-livescore.svg?style=flat-square)
-[![License](https://img.shields.io/github/license/andrewda/frc-livescore.svg?style=flat-square)](https://github.com/andrewda/frc-livescore/blob/master/LICENSE)
-![Version](https://img.shields.io/pypi/v/livescore.svg?style=flat-square)
-![Downloads](https://img.shields.io/pypi/dm/livescore.svg?style=flat-square)
+[![Build](https://github.com/TechplexEngineer/frc-livescore/actions/workflows/build.yml/badge.svg)](https://github.com/TechplexEngineer/frc-livescore/actions/workflows/build.yml)
+[![GitHub license](https://img.shields.io/github/license/techplexengineer/frc-livescore)](https://github.com/TechplexEngineer/frc-livescore/blob/main/LICENSE)
 
 ## Features
 
-- Access to many parts of the scoreboard (and more coming soon)
+- Access to common parts of the scoreboard (Time, Score, Match Number)
 - Easy to use
 - Super fast
 - Template matching (it doesn't matter where the scoreboard is on the screen)
@@ -27,25 +25,27 @@ and OpenCV 3 (instructions for
 [Linux](http://docs.opencv.org/3.2.0/d7/d9f/tutorial_linux_install.html))
 installed in order for `frc-livescore` to work.
 
-Depends on python 3.6 as this project uses SURF algorithm which is not included in newer versions of opencv.
+Tested with python 3.10.
+
+This fork of [andrewda/frc-livescore](https://github.com/andrewda/frc-livescore) updates dependencies, uses ORB algorithm for score board detection which is not restricted by licenses. Add support for 2020, 2021 and 2022 games.
 
 ## Usage
 
-*Check out the `examples` directory for full examples on the usage of
+*Check out the `examples` or `tests` directory for full examples on the usage of
 `frc-livescore`.*
 
 A very simple example program would be to just get the score data from a single
 image. To do this, we'll use OpenCV to read the image.
 
 ```python
-from livescore import Livescore2018
+from livescore import Livescore2022
 import cv2
 
 # Initialize a new Livescore instance
-frc = Livescore2018()
+frc = Livescore2022()
 
 # Read the image from disk
-image = cv2.imread('./examples/scenes/scene1.png')
+image = cv2.imread('./tests/images/2022/frame1991.png.png')
 
 # Get score data
 data = frc.read(image)
@@ -59,9 +59,9 @@ print(data)
 
 #### LivescoreYEAR(debug=False, save_training_data=False, training_data=None)
 
-> Currently supported years: 2017, 2018, 2019
+> Currently supported years: 2017, 2018, 2019, 2020, 2021, 2022
 >
-> e.g. Livescore2017(), Livescore2018() or Livescore2019()
+> e.g. Livescore2017(), Livescore2018() or Livescore2019() or Livescore2020() or Livescore2021() or Livescore2022()
 
 - `debug` - Debug mode, where outputs are displayed.
 - `save_training_data` - Whether the training should be saved to disk.
@@ -105,11 +105,4 @@ scale is owned for the 2018 game.
 - `red` - An [Alliance](#alliance) class for the red alliance.
 - `blue` - An [Alliance](#alliance) class for the blue alliance.
 
-<!--
-#### CompletedMatchDetails
 
-- `match` - The match identification, such as "Qualifications 16"
-- `winner` - A string containing the match winner; either "red" or "blue"
-- `red` - An [Alliance](#alliance) class for the red alliance
-- `blue` - An [Alliance](#alliance) class for the blue alliance
--->
