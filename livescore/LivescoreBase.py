@@ -83,6 +83,10 @@ class NoOverlayFoundException(Exception):
     pass
 
 
+class InvalidScaleException(Exception):
+    pass
+
+
 class LivescoreBase(object):
     def __init__(self, game_year, debug=False, save_training_data=False, append_training_data=True):
         self._debug = debug
@@ -102,18 +106,26 @@ class LivescoreBase(object):
         self._transform = None  # scale, tx, ty
 
         # Setup feature detector and matcher
-        self._detector = cv2.xfeatures2d.SURF_create()
+        self._detector = cv2.ORB_create(nfeatures=10000)  #nfeatures=1550000
 
-        FLANN_INDEX_KDTREE = 0
-        index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+        # FLANN_INDEX_KDTREE = 0
+        FLANN_INDEX_LSH = 6
+        index_params = dict(
+            algorithm=FLANN_INDEX_LSH,
+            table_number=6,
+            key_size=12,
+            multi_probe_level=1
+        )
         search_params = dict(checks=50)
         self._flann = cv2.FlannBasedMatcher(index_params, search_params)
+        # -- OR --
+        # self._flann = cv2.BFMatcher(normType=cv2.NORM_HAMMING)
 
         self._MIN_MATCH_COUNT = 9
 
         # Compute score overlay keypoints and descriptors (Source Image should be 1280x170)
         self._TEMPLATE_SHAPE = (1280, 170)
-        self._TEMPLATE_SCALE = 0.5  # lower is faster
+        self._TEMPLATE_SCALE = 1  # lower is faster
         template = cv2.imread(
             pkg_resources.resource_filename(__name__, 'templates') + \
             '/score_overlay_{}.png'.format(game_year))
@@ -168,11 +180,15 @@ class LivescoreBase(object):
         # Store all the good matches as per Lowe's ratio test
         good = []
         for m, n in matches:
-            if m.distance < 0.7 * n.distance:
+            if m.distance < 0.75 * n.distance:
                 good.append(m)
 
         if self._debug:
-            debug_img = cv2.drawMatchesKnn(self._template, self._kp1, img, kp2, [[m] for m in good], None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+            debug_img = cv2.drawMatchesKnn(self._template, self._kp1, img, kp2, [[m] for m in good], None, flags=cv2.DrawMatchesFlags_DEFAULT)
+            debug_img = cv2.resize(debug_img, (
+                np.int32(1280*2/2),
+                np.int32(720/2)
+            ))
             cv2.imshow("Match", debug_img)
             cv2.waitKey()
 
@@ -187,6 +203,8 @@ class LivescoreBase(object):
                     'tx': t[0][0, 2],
                     'ty': t[0][1, 2],
                 }
+                if self._transform['scale'] == 0:
+                    raise InvalidScaleException("Scale is zero")
                 self._is_new_overlay = True
                 return
 
@@ -233,7 +251,7 @@ class LivescoreBase(object):
 
     def _parseDigits(self, img):
         # Crop height to digits
-        _, contours, _ = cv2.findContours(img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         top = img.shape[1]
         bottom = 0
         for cnt in contours:
@@ -250,7 +268,7 @@ class LivescoreBase(object):
         img = cv2.resize(img, (int(img.shape[1] * scale), int(img.shape[0] * scale)))
 
         # Find bounds for each digit
-        _, contours, _ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         digits = []
         for cnt in filter(lambda c: cv2.contourArea(c) > 100, contours):
             segments = segments_to_numpy([cv2.boundingRect(cnt)])

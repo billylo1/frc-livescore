@@ -3,10 +3,14 @@ import numpy as np
 import cv2.cv2 as cv2
 
 # with the name image.jpg
-img1 = cv2.imread('score_overlay_2021_1280.png')
-img2 = cv2.imread('2021/frame-00570.jpg')
+img1 = cv2.imread('score_overlay_2022.png')
+img2 = cv2.imread('2022/frame1992.png')
 
-orb = cv2.ORB_create(nfeatures=1000) # Increasing nfeatures to get more keypoints
+assert img1 is not None
+assert img2 is not None
+
+
+orb = cv2.ORB_create(nfeatures=1000)  # Increasing nfeatures to get more keypoints
 
 kp1, des1 = orb.detectAndCompute(img1, None)
 kp2, des2 = orb.detectAndCompute(img2, None)

@@ -1,44 +1,22 @@
+import sys
 import numpy as np
 import cv2.cv2 as cv2
 
-def orb3_flann():
-    # Read the query image as query_img
-    # and train image This query image
-    # is what you need to find in train image
-    # Save it in the same directory
+if __name__ == "__main__":
     # with the name image.jpg
     img1 = cv2.imread('score_overlay_2022.png')
     img2 = cv2.imread('2022/frame1992.png')
+
     assert img1 is not None
     assert img2 is not None
 
-    # img2 = cv2.resize(img2, (1280, 720))
+    orb = cv2.ORB_create(nfeatures=10000)  # Increasing nfeatures to get more keypoints
 
-    # Convert it to grayscale
-    # query_img_bw = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
-    # train_img_bw = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
-
-    # Initialize the ORB detector algorithm
-    orb = cv2.ORB_create()
-
-    # Now detect the keypoints and compute
-    # the descriptors for the query image
-    # and train image
     kp1, des1 = orb.detectAndCompute(img1, None)
     kp2, des2 = orb.detectAndCompute(img2, None)
 
-    # FLANN parameters
-    FLANN_INDEX_KDTREE = 1
-    FLANN_INDEX_LSH = 6
-    index_params = dict(
-        algorithm=FLANN_INDEX_LSH,
-        table_number=6,
-        key_size=12,
-        multi_probe_level=1
-    )
-    search_params = dict(checks=50)  # or pass empty dictionary
-    flann = cv2.FlannBasedMatcher(index_params, search_params)
-    matches = flann.knnMatch(des1, des2, k=2)
+    matcher = cv2.BFMatcher()
+    matches = matcher.knnMatch(des1, des2, k=2)
 
     # Apply ratio test
     good = []
@@ -46,9 +24,17 @@ def orb3_flann():
         if m.distance < 0.75 * n.distance:
             good.append(m)
 
-    src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
-    dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
+    print("found {} matches".format(len(good)))
+
+    if len(good) < 7:
+        print("Not enough good keypoint matches between template and image")
+        sys.exit(1)
+
+    src_pts = np.float32([kp1[m.queryIdx].pt for m in good])
+    dst_pts = np.float32([kp2[m.trainIdx].pt for m in good])
     t = cv2.estimateAffinePartial2D(src_pts, dst_pts)
+
+    # print("kp1:{} kp2:{}".format(len(src_pts), len(dst_pts)))
 
     transform = {
         'scale': t[0][0, 0],
@@ -88,7 +74,3 @@ def orb3_flann():
     ))
     cv2.imshow("Matches", img3)
     cv2.waitKey()
-
-
-if __name__ == "__main__":
-    orb3_flann()

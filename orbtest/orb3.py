@@ -9,8 +9,8 @@ import cv2.cv2 as cv2
 # is what you need to find in train image
 # Save it in the same directory
 # with the name image.jpg
-img1 = cv2.imread('score_overlay_2021_1280.png')
-img2 = cv2.imread('2021/frame-00570.jpg')
+img1 = cv2.imread('match_results_2022.png')
+img2 = cv2.imread('2022/frame2040.png')
 # img2 = cv2.imread('2021/rr-none.png')
 
 # Initialize the ORB detector algorithm
@@ -76,8 +76,8 @@ def _drawBox(img, box, color):
     cv2.polylines(img, [box], True, color, 2, cv2.LINE_AA)
 
 
-box = _cornersToBox(transformPoint((0, 0)), transformPoint((1280, 170)))
-_drawBox(img2, box, (255, 255, 0))
+# box = _cornersToBox(transformPoint((0, 0)), transformPoint((1280, 170)))
+# _drawBox(img2, box, (255, 255, 0))
 
 
 scale_factor = .75
@@ -86,7 +86,6 @@ img3 = cv2.resize(img2, (
     np.int32(np.round(img2.shape[0] * scale_factor))
 ))
 
-img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, [[m] for m in good], None,
-                         flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+# img3 = cv2.drawMatchesKnn(img1, kp1, img2, kp2, [[m] for m in good], None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
 cv2.imshow("Matches", img3)
 cv2.waitKey()
