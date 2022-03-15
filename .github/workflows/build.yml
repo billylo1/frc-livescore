@@ -16,10 +16,49 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install -r requirements.txt
-        pip install -U pytest pytest-xdist
+        python -m pip install -r requirements.txt
+        python -m pip install -U pytest pytest-xdist
+        python -m pip install -U build
         sudo apt-get -y install tesseract-ocr libtesseract-dev
 
     - name: Test with pytest
       run: |
         pytest -n 3
+
+    - name: Generate Version
+      uses: paulhatch/semantic-version@v4.0.2
+      id: version
+      with:
+        # The prefix to use to identify tags
+        tag_prefix: "v"
+        # A string which, if present in a git commit, indicates that a change represents a
+        # major (breaking) change, supports regular expressions wrapped with '/'
+        major_pattern: "(MAJOR)"
+        # Same as above except indicating a minor change, supports regular expressions wrapped with '/'
+        minor_pattern: "(MINOR)"
+        # A string to determine the format of the version output
+        #"${major}.${minor}.${patch}-prerelease${increment}"
+        format: "${major}.${minor}.${patch}-pre${increment}"
+        # Optional path to check for changes. If any changes are detected in the path the
+        # 'changed' output will true. Enter multiple paths separated by spaces.
+        # change_path: "src/my-service"
+        # Named version, will be used as suffix for name version tag
+        # namespace: my-service
+        # Indicate whether short tags like 'v1' should be supported. If false only full
+        # tags like 'v1.0.0' will be recognized.
+        short_tags: true
+        # If this is set to true, *every* commit will be treated as a new version.
+        bump_each_commit: false
+
+    - name: Inject version into setup.py
+      run: |
+        sed -i 's/%VERSION%/${{ steps.version.outputs.version }}/g' setup.py
+
+    - name: Build package
+      run: python -m build
+
+    - name: Publish package
+      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}

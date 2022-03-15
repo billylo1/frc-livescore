@@ -1,12 +1,11 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='livescore',
-    version='2019.0.0',
+    name='frc-livescore-ng',
+    version='%VERSION%',
     description='Get FRC scores from an image',
-    author='Andrew Dassonville',
-    author_email='dassonville.andrew@gmail.com',
-    url='https://github.com/andrewda/frc-livescore',
+    author='Blake Bourque',
+    url='https://github.com/TechplexEngineer/frc-livescore',
     keywords=['frc', 'score', 'robotics'],
     license='MIT',
     packages=find_packages(exclude=('tests', 'docs')),
