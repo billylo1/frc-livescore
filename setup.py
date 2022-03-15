@@ -13,7 +13,7 @@ setup(
     url='https://github.com/TechplexEngineer/frc-livescore',
     keywords=['frc', 'score', 'robotics'],
     license='MIT',
-    package_dir={"": "livescore"},
+    # package_dir={"": "livescore"},
     packages=find_packages(exclude=('tests', 'docs')),
     package_data={'livescore': ['templates/*.png', 'tessdata/*.traineddata', 'training_data/*.pkl']},
     install_requires=[
