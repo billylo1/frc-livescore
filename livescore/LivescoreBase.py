@@ -179,7 +179,10 @@ class LivescoreBase(object):
 
         # Store all the good matches as per Lowe's ratio test
         good = []
-        for m, n in matches:
+        for match in matches:
+            # skip any matches that don't have two tuples
+            if not (type(match) is tuple and len(match) == 2):
+                continue
             if m.distance < 0.75 * n.distance:
                 good.append(m)
 
