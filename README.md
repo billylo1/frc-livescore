@@ -9,13 +9,13 @@ A package which can determine the score of a live FRC game from an image.
 
 - Access to common parts of the scoreboard (Time, Score, Match Number)
 - Easy to use
-- Super fast
+- Fast
 - Template matching (it doesn't matter where the scoreboard is on the screen)
 
 ## Installation
 
 ```bash
-$ pip install livescore
+$ pip install frc-livescore-ng
 ```
 
 You will also need to have [Tesseract](https://github.com/tesseract-ocr/tesseract/wiki#installation)
@@ -32,7 +32,7 @@ This fork of [andrewda/frc-livescore](https://github.com/andrewda/frc-livescore)
 ## Usage
 
 *Check out the `examples` or `tests` directory for full examples on the usage of
-`frc-livescore`.*
+`frc-livescore-ng`.*
 
 A very simple example program would be to just get the score data from a single
 image. To do this, we'll use OpenCV to read the image.
@@ -45,7 +45,7 @@ import cv2
 frc = Livescore2022()
 
 # Read the image from disk
-image = cv2.imread('./tests/images/2022/frame1991.png.png')
+image = cv2.imread('./tests/images/2022/frame1991.png')
 
 # Get score data
 data = frc.read(image)
