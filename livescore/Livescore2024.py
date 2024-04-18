@@ -18,7 +18,7 @@ class Livescore2024(LivescoreBase):
             br = self._transformPoint((980, 50))
 
             raw_match_name = self._parseRawMatchName(self._getImgCropThresh(img, tl, br))
-            print('raw_match_name:', raw_match_name)
+            # print('raw_match_name:', raw_match_name)
             # self._match_key = self._getMatchKey(raw_match_name)
             self._match_key = raw_match_name
             if self._match_key:
@@ -57,7 +57,7 @@ class Livescore2024(LivescoreBase):
             time_remaining_seconds = self._parseDigits(self._getImgCropThresh(img, tl2, br2))
             # print('time_remaining_seconds:', time_remaining_seconds)
             time_remaining = str(time_remaining_minutes) + ":" + str(time_remaining_seconds).zfill(2)
-            print('time_remaining:', time_remaining)
+            # print('time_remaining:', time_remaining)
 
             if self._debug:
                 # draw a green box for time
@@ -120,7 +120,7 @@ class Livescore2024(LivescoreBase):
 
         left_score = self._parseDigits(self._getImgCropThresh(img, left_tl, left_br, white=True))
         right_score = self._parseDigits(self._getImgCropThresh(img, right_tl, right_br, white=True))
-        print(left_score, right_score)
+        # print(left_score, right_score)
 
         if is_flipped:
             red_score = right_score
@@ -155,7 +155,7 @@ class Livescore2024(LivescoreBase):
         left_br2 = self._transformPoint((255, 162))
 
         left_tl3 = self._transformPoint((256, 123))
-        left_br3 = self._transformPoint((355, 162))
+        left_br3 = self._transformPoint((347, 162))
 
         # Right score limits
 

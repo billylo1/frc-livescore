@@ -18,7 +18,7 @@ default_app = firebase_admin.initialize_app(cred_obj, {
 
 # Initialize new Livescore instance
 frc = Livescore2024(debug=False)
-mostRecentMatchKey = { "Newton": "", "Galileo": "", "Tesla": "", "Curie": ""}
+mostRecentMatchKey = { "Archimedes": "", "Curie": "", "Daly": "", "Galileo": "", "Hopper": "", "Johnson": "", "Milstein": "", "Newton": "", "Einstein": ""}
 
 def send_team_message(team, match_key, channel):
     try:
@@ -33,7 +33,7 @@ def send_team_message(team, match_key, channel):
                 topic=topic,
             )
             # Send a message to the devices subscribed to the provided topic.
-            # response = messaging.send(message)
+            response = messaging.send(message)
             # Response is a message ID string.
             # print('Successfully sent message:', response)
     except Exception as e:
@@ -70,7 +70,6 @@ def read_image(pil_image, channel):
             json_object = json.loads(data.toJSON())
             ref = db.reference("/events/" + channel)
             ref.set(json_object)
-
             # save most recent match key to a local variable
             currentMatchKey = json_object["match_key"]
             sendMessage = False
@@ -84,11 +83,11 @@ def read_image(pil_image, channel):
                 for team in data.blue.teams:
                     send_team_message(team, currentMatchKey, channel)
 
-            mostRecentMatchKey[channel] = json_object["match_key"]
+                mostRecentMatchKey[channel] = json_object["match_key"]
 
-            # print('Data sent to Firebase')
         else:
             print('Failed to fetch data')
+        
 
     except Exception as e:
         print(e)
@@ -101,7 +100,7 @@ def process_frame():
         # open_cv_image = cv2.imread('./scenes2024/auto.png')
 
         pil_image = ImageGrab.grab(all_screens=False)  # true = screen 2
-        # crop into 4 images
+        # crop into 8 images
         crop = False
         menuBarHeight = 42
         if crop:
