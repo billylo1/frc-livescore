@@ -33,6 +33,7 @@ class LivescoreCommon(LivescoreBase):
 
     def _getTimeAndMode(self, img, debug_img):
         # Check for match under review
+        print('aaaaa');
         review_point1 = self._transformPoint((624, 93))
         review_sample1 = img[review_point1[1], review_point1[0], :]
         hsvL = colorsys.rgb_to_hsv(float(review_sample1[2])/255, float(review_sample1[1])/255, float(review_sample1[0])/255)
@@ -40,7 +41,7 @@ class LivescoreCommon(LivescoreBase):
         review_sample2 = img[review_point2[1], review_point2[0], :]
         hsvR = colorsys.rgb_to_hsv(float(review_sample2[2])/255, float(review_sample2[1])/255, float(review_sample2[0])/255)
         if 0.116 < hsvL[0] < 0.216 and 0.116 < hsvR[0] < 0.216:
-            return 0, 'post_match'
+            return 0, 'post_match1'
 
         # Find time remaining
         horiz_center = self._TEMPLATE_SHAPE[0]/2
@@ -67,7 +68,7 @@ class LivescoreCommon(LivescoreBase):
 
         if time_remaining == 0:
             if hsv1[1] > 0.6 and hsv2[1] > 0.6:  # Both saturated
-                mode = 'post_match'
+                mode = 'post_match2'
             elif hsv1[1] > 0.6:  # First saturated
                 mode = 'auto'  # End of auton
             else:

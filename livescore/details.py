@@ -1,3 +1,5 @@
+import json
+
 class Alliance(object):
     def __init__(self, score=None, teams=[]):
         self.teams = teams
@@ -146,6 +148,13 @@ class OngoingMatchDetails(object):
         self.time = time
         self.red = red
         self.blue = blue
+
+    def toJSON(self):
+        return json.dumps(
+            self,
+            default=lambda o: o.__dict__, 
+            sort_keys=True,
+            indent=4)
 
     def __str__(self):
 

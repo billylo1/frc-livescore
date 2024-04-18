@@ -7,3 +7,4 @@ from .Livescore2019 import Livescore2019
 from .Livescore2020 import Livescore2020
 from .Livescore2021 import Livescore2021
 from .Livescore2022 import Livescore2022
+from .Livescore2024 import Livescore2024

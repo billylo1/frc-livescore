@@ -179,10 +179,7 @@ class LivescoreBase(object):
 
         # Store all the good matches as per Lowe's ratio test
         good = []
-        for match in matches:
-            # skip any matches that don't have two tuples
-            if not (type(match) is tuple and len(match) == 2):
-                continue
+        for m, n in matches:
             if m.distance < 0.75 * n.distance:
                 good.append(m)
 
@@ -305,8 +302,9 @@ class LivescoreBase(object):
                 return None
             else:
                 # Perform classification
+                # print(w, self._OCR_HEIGHT)
                 if w > self._OCR_HEIGHT:  # More than 1 digit, fall back to Tesseract
-                    logging.warning("Falling back to Tesseract!")
+                    # logging.warning("Falling back to Tesseract!")
                     padded_img = 255 - cv2.copyMakeBorder(img[y:y + h, x:x + w], 5, 5, 5, 5, cv2.BORDER_CONSTANT, None,
                                                           (0, 0, 0))
                     config = '--oem 1 --psm 8 {} -l digits'.format(TESSDATA_CONFIG)
