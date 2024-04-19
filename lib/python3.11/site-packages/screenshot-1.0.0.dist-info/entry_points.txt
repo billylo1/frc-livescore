@@ -1,0 +1,3 @@
+[console_scripts]
+screenshot = screenshot.screencapture:run
+

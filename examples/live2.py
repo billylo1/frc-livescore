@@ -71,7 +71,7 @@ def read_image(pil_image, channel):
             json_object = json.loads(data.toJSON())
 
             currentMatchName = json_object["match_name"]
-            sendMessage = True
+            sendMessage = False
 
             if not mostRecentMatchDetails[channel].__contains__("match_name") or mostRecentMatchDetails[channel]["match_name"] != currentMatchName:
                 if sendMessage:                
@@ -108,33 +108,21 @@ def read_image(pil_image, channel):
 def process_frame(): 
     
     try:
-        # open_cv_image = cv2.imread('./scenes2024/auto.png')
 
-        pil_image_right = ImageGrab.grab(all_screens=False)  # false = screen 3
-        # pil_image = ImageGrab.grab(all_screens=True)  # true = screen 2
-        # crop into 8 images
-        crop = True
-        menuBarHeight = 42
-        if crop:
-            pil_image0 = pil_image_right.crop((0, 0+menuBarHeight, pil_image_right.width/2, pil_image_right.height/2+menuBarHeight))
-            pil_image1 = pil_image_right.crop((0, pil_image_right.height/2+1+menuBarHeight, pil_image_right.width/2+1, pil_image_right.height+menuBarHeight))
-            pil_image2 = pil_image_right.crop((pil_image_right.width/2+1, 0+menuBarHeight, pil_image_right.width, pil_image_right.height/2+menuBarHeight))
-            pil_image3 = pil_image_right.crop((pil_image_right.width/2+1, pil_image_right.height/2+1+menuBarHeight, pil_image_right.width, pil_image_right.height+menuBarHeight))
-            # pil_image4 = pil_image.crop((0, 0+menuBarHeight, pil_image.width/2, pil_image.height/2+menuBarHeight))
-            # pil_image5 = pil_image.crop((0, pil_image.height/2+1+menuBarHeight, pil_image.width/2+1, pil_image.height+menuBarHeight))
-            # pil_image6 = pil_image.crop((pil_image.width/2+1, 0+menuBarHeight, pil_image.width, pil_image.height/2+menuBarHeight))
-            # pil_image7 = pil_image.crop((pil_image.width/2+1, pil_image.height/2+1+menuBarHeight, pil_image.width, pil_image.height+menuBarHeight))
+        pil_image4 = ImageGrab.grab(windowId=43001)  # hopper
+        read_image(pil_image4, 'Hopper')
 
-            read_image(pil_image0, 'Archimedes')
-            read_image(pil_image1, 'Curie')
-            read_image(pil_image2, 'Daly')
-            read_image(pil_image3, 'Galileo')
-            # read_image(pil_image4, 'Hopper')
-            # read_image(pil_image5, 'Johnson')
-            # read_image(pil_image6, 'Milstein')
-            # read_image(pil_image7, 'Newton')
-        # else:
-            # read_image(pil_image, 'Einstein')
+        pil_image5 = ImageGrab.grab(windowId=43002)  # johnson
+        read_image(pil_image5, 'Johnson')
+
+        pil_image6 = ImageGrab.grab(windowId=43003)  # Milstein
+        read_image(pil_image6, 'Milstein')
+
+        pil_image7 = ImageGrab.grab(windowId=43004)  # Newton
+        read_image(pil_image7, 'Newton') #47296
+
+        # pil_image99 = ImageGrab.grab(windowId=47296)  # Newton
+        # read_image(pil_image99, 'Newton') #47296
 
     except Exception as e:
         print(e)
@@ -148,3 +136,5 @@ while True:
     sleep_time = 1.0 - (time.monotonic() - starttime)
     if sleep_time > 0:
         time.sleep(sleep_time)
+
+# process_frame()
