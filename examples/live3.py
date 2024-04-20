@@ -8,6 +8,8 @@ from firebase_admin import db
 from firebase_admin import messaging
 import json
 import time
+import traceback
+
 
 cred_obj = firebase_admin.credentials.Certificate('./serviceAccount.json')
 databaseURL = 'https://frc-livescore-default-rtdb.firebaseio.com/'
@@ -17,11 +19,11 @@ default_app = firebase_admin.initialize_app(cred_obj, {
 	})
 
 print ('argument list', sys.argv)
-event = int(sys.argv[1])
-windowId = int(sys.argv[2])
+event = sys.argv[1]
+windowId = sys.argv[2]
 
 # Initialize new Livescore instance
-frc = Livescore2024(debug=False)
+frc = Livescore2024(debug=True)
 mostRecentMatchDetails = { "Archimedes": {}, "Curie":  {}, "Daly":  {}, "Galileo":  {}, "Hopper":  {}\
                           , "Johnson": {}, "Milstein":  {}, "Newton":  {}, "Einstein":  {}}
 
@@ -42,7 +44,7 @@ def send_team_message(team, match_name, channel):
             # Response is a message ID string.
             print('Successfully sent message:', response)
     except Exception as e:
-        print(e)
+        traceback.print_exception(e)
     return
 
 
@@ -104,9 +106,8 @@ def read_image(pil_image, channel):
         # else:
             # print('Failed to fetch data')
         
-
     except Exception as e:
-        print(e)
+        traceback.print_exception(e)
 
     return
 
@@ -118,27 +119,22 @@ def process_frame():
         # pil_image = ImageGrab.grab(all_screens=True)  # true = screen 2
         # crop into 8 images
         menuBarHeight = 42
-        pil_image0 = ImageGrab.grab(windowId=44376)  # false = screen 3
-        read_image(pil_image0, 'Archimedes')
-
-        pil_image1 = ImageGrab.grab(windowId=42998)  # false = screen 3
-        read_image(pil_image1, 'Curie')
-
-        pil_image2 = ImageGrab.grab(windowId=42999)  # false = screen 3
-        read_image(pil_image2, 'Daly')
-
-        pil_image3 = ImageGrab.grab(windowId=46663)  # false = screen 3
-        read_image(pil_image3, 'Galileo')
+        pil_image0 = ImageGrab.grab(windowId=windowId)  # false = screen 3
+        read_image(pil_image0, event)
 
     except Exception as e:
+        # traceback.print_exception(e)
         print(e)
-        return
+            
+    return
 
 
 
-while True:
-    starttime = time.monotonic()
-    process_frame()
-    sleep_time = 1.0 - (time.monotonic() - starttime)
-    if sleep_time > 0:
-        time.sleep(sleep_time)
+# while True:
+    # starttime = time.monotonic()
+    # process_frame()
+    # sleep_time = 2.0 - (time.monotonic() - starttime)
+    # if sleep_time > 0:
+    #     time.sleep(sleep_time)
+
+process_frame()

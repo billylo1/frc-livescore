@@ -57,13 +57,6 @@ def read_image(pil_image, channel):
                 data.blue.teams,
                 data.red.teams
             ))
-            for team in data.red.teams:
-                if team is None:
-                    return
-                
-            for team in data.blue.teams:
-                if team is None:
-                    return
 
             if not str(data.time).startswith("0") and not str(data.time).startswith("1") and not str(data.time).startswith("2") and len(str(data.time)) != 4:
                 return  
@@ -71,7 +64,7 @@ def read_image(pil_image, channel):
             json_object = json.loads(data.toJSON())
 
             currentMatchName = json_object["match_name"]
-            sendMessage = False
+            sendMessage = True
 
             if not mostRecentMatchDetails[channel].__contains__("match_name") or mostRecentMatchDetails[channel]["match_name"] != currentMatchName:
                 if sendMessage:                
@@ -90,6 +83,15 @@ def read_image(pil_image, channel):
                 or mostRecentMatchDetails[channel]["blue"]["score"] != json_object["blue"]["score"]:
                 
                 mostRecentMatchDetails[channel] = json_object
+
+                for team in json_object["red"]["teams"]:
+                    if team is None:
+                        team = ""
+                
+                for team in json_object["blue"]["teams"]:
+                    if team is None:
+                        team = ""
+
                 ref = db.reference("/events/" + channel)
                 ref.set(json_object)
                 # print('Updated firebase with match details for channel: ' + channel)
